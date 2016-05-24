@@ -14,6 +14,9 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -21,6 +24,7 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Iterator;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -55,7 +59,26 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result){
+            Log.d("debug", result);
             textView.setText(result);
+            JSONObject jObject = null;
+            try {
+                jObject = new JSONObject(result);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Iterator<String> keys = jObject.keys();
+
+            while(keys.hasNext()){
+                String key = keys.next();
+                try {
+                    String value = jObject.getString(key);
+                    Log.d("JSONJSON", value);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
         }
 
         private String downloadUrl(String myurl) throws IOException {
